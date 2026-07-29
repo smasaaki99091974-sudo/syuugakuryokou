@@ -1,6 +1,4 @@
-import io
-import matplotlib.pyplot as plt
-import numpy as np
+import os
 import streamlit as st
 from PIL import Image
 
@@ -9,136 +7,53 @@ st.set_page_config(
 )
 
 
-# ---- 画像を自動生成する関数 ----
-def generate_quiz_image(place_key):
-    fig, ax = plt.subplots(figsize=(6, 3.5))
-    ax.axis("off")
+# ---- 各問題の画像（写真）を読み込む関数 ----
+def get_quiz_image(file_prefix):
+    # .jpg または .png の両方の拡張子に対応
+    jpg_path = f"{file_prefix}.jpg"
+    png_path = f"{file_prefix}.png"
 
-    if place_key == "higashi":
-        # ひがし茶屋街：格子風デザインと和風カラー
-        fig.patch.set_facecolor("#faf0e6")
-        ax.set_facecolor("#faf0e6")
-        for x in np.linspace(0.1, 0.9, 15):
-            ax.axvline(x, color="#8b4513", linewidth=3)
-        ax.axhline(0.5, color="#8b4513", linewidth=6)
-        ax.text(
-            0.5,
-            0.5,
-            "ひがし茶屋街\n(出格子・木虫籠)",
-            ha="center",
-            va="center",
-            fontsize=18,
-            color="#4a2e18",
-            weight="bold",
-            bbox=dict(
-                boxstyle="round,pad=0.5", facecolor="#fff8dc", edgecolor="#8b4513"
-            ),
+    if os.path.exists(jpg_path):
+        return Image.open(jpg_path)
+    elif os.path.exists(png_path):
+        return Image.open(png_path)
+    else:
+        # ファイルがない場合は案内用ダミーテキストを表示（エラーで止まらないようにする）
+        st.warning(
+            f"画像ファイル '{file_prefix}.jpg' (または .png) が見つかりません。GitHubにアップロードしてください。"
         )
-
-    elif place_key == "aquarium":
-        # 越前松島水族館：海と魚のイメージ
-        fig.patch.set_facecolor("#e0f7fa")
-        ax.set_facecolor("#e0f7fa")
-        ax.scatter(
-            [0.2, 0.4, 0.7, 0.85],
-            [0.3, 0.7, 0.4, 0.8],
-            s=[300, 500, 400, 250],
-            color="#0288d1",
-            alpha=0.6,
-        )
-        ax.text(
-            0.5,
-            0.5,
-            "越前松島水族館\n(さんごの海 / 海上さんぽ)",
-            ha="center",
-            va="center",
-            fontsize=18,
-            color="#01579b",
-            weight="bold",
-            bbox=dict(
-                boxstyle="round,pad=0.5", facecolor="#ffffff", edgecolor="#0288d1"
-            ),
-        )
-
-    elif place_key == "museum":
-        # 恐竜博物館：化石・太古のイメージ
-        fig.patch.set_facecolor("#f5f5dc")
-        ax.set_facecolor("#f5f5dc")
-        ax.plot(
-            [0.1, 0.3, 0.5, 0.7, 0.9],
-            [0.2, 0.6, 0.3, 0.7, 0.2],
-            color="#5d4037",
-            lw=4,
-            ls="--",
-        )
-        ax.text(
-            0.5,
-            0.5,
-            "福井県立恐竜博物館\n(フクイラプトル)",
-            ha="center",
-            va="center",
-            fontsize=18,
-            color="#3e2723",
-            weight="bold",
-            bbox=dict(
-                boxstyle="round,pad=0.5", facecolor="#fff8e1", edgecolor="#5d4037"
-            ),
-        )
-
-    elif place_key == "onsen":
-        # あわら温泉：温泉・和みイメージ
-        fig.patch.set_facecolor("#fff3e0")
-        ax.set_facecolor("#fff3e0")
-        ax.text(
-            0.5,
-            0.5,
-            "あわら温泉 湯まち広場\n(足湯)",
-            ha="center",
-            va="center",
-            fontsize=18,
-            color="#e65100",
-            weight="bold",
-            bbox=dict(
-                boxstyle="round,pad=0.5", facecolor="#ffffff", edgecolor="#ff9800"
-            ),
-        )
-
-    buf = io.BytesIO()
-    plt.savefig(buf, format="png", bbox_inches="tight", facecolor=fig.get_facecolor())
-    plt.close(fig)
-    buf.seek(0)
-    return Image.open(buf)
+        return None
 
 
-# ---- クイズのデータ ----
+# ---- クイズのデータ（各問題に対応する画像ファイル名のプレフィックスを指定） ----
 quiz_list = [
     {
         "q": "ひがし茶屋街の美しい建物に見られる、外から中が見えにくく、中から外が見えやすい木製の格子（こうし）を何と呼ぶでしょう？",
         "opts": ["A: 出格子", "B: 木虫籠（きむすこ）", "C: 千本格子"],
         "ans": "B: 木虫籠（きむすこ）",
         "exp": "金沢の町家特有の細い木格子のことで、光を取り入れつつプライバシーを守る工夫がされています。",
-        "image_key": "higashi",
+        "image_prefix": "kimusuko",
     },
     {
         "q": "越前松島水族館で大人気の、透明なアクリルガラスの上に寝転がって海の上に浮いているような体験ができるコーナーの名前は？",
         "opts": ["A: さんごの海", "B: 海の浮島", "C: 水上さんぽ"],
         "ans": "A: さんごの海",
         "exp": "床一面が透明なガラス張りになっていて、魚たちが泳ぐプールの上に寝そべることができます。",
-        "image_key": "aquarium",
+        "image_prefix": "aquarium",
     },
     {
         "q": "福井県勝山市で発見され、名前にも「フクイ」とついている肉食恐竜の名前は次のうちどれでしょう？",
         "opts": ["A: フクイサウルス", "B: フクイティタン", "C: フクイラプトル"],
         "ans": "C: フクイラプトル",
         "exp": "フクイラプトルは福井県で発見された肉食恐竜です（フクイサウルスは草食恐竜です）。",
-        "image_key": "museum",
+        "image_prefix": "museum",
     },
     {
         "q": "あわら温泉の湯まち広場にある、無料で誰でも気軽に楽しめる人気スポットは何でしょう？",
         "opts": ["A: 足湯", "B: 温泉卵作り場", "C: 温泉プール"],
         "ans": "A: 足湯",
         "exp": "あわら温泉の足湯は複数の浴槽があり、源泉かけ流しの湯を無料で楽しめます。",
-        "image_key": "onsen",
+        "image_prefix": "onsen",
     },
 ]
 
@@ -178,9 +93,10 @@ else:
     st.progress((current_idx) / total_q)
     st.caption(f"第 {current_idx + 1} 問 / 全 {total_q} 問")
 
-    # 関連イラスト画像の表示
-    img = generate_quiz_image(q_data["image_key"])
-    st.image(img, use_container_width=True)
+    # 画像の取得と表示
+    img = get_quiz_image(q_data["image_prefix"])
+    if img is not None:
+        st.image(img, use_container_width=True)
 
     # 問題文
     st.markdown(f"### {q_data['q']}")
@@ -213,4 +129,3 @@ else:
             st.session_state.answered = False
             st.session_state.selected_opt = None
             st.rerun()
-    
