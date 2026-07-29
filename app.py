@@ -2,7 +2,6 @@ import streamlit as st
 
 st.title("金沢・福井 修学旅行クイズ")
 
-# クイズのデータ
 quiz_list = [
     {
         "q": "【ひがし茶屋街】外から中が見えにくく、中から外が見えやすい木製の格子を何と呼ぶ？",
@@ -30,18 +29,15 @@ quiz_list = [
     },
 ]
 
-# セッション状態（回答の保持）の初期化
-if "user_answers" not in st_session_state:
+# セッション状態の初期化 (st.session_state に修正)
+if "user_answers" not in st.session_state:
     st.session_state["user_answers"] = {}
-
-score = 0
 
 # 各問題の表示
 for i, q in enumerate(quiz_list, start=1):
     st.subheader(f"第 {i} 問")
     st.write(q["q"])
 
-    # 選択肢ラジオボタン
     choice = st.radio("選択してください", q["opts"], key=f"q_{i}")
     st.session_state["user_answers"][i] = choice
     st.divider()
@@ -58,5 +54,6 @@ if st.button("答え合わせをする", type="primary"):
             st.error(f"第 {i} 問：不正解... ❌（正解: {q['ans']}）")
         st.caption(f"解説: {q['exp']}")
 
-    st.balloons()  # 風船を飛ばす演出
+    st.balloons()
     st.header(f"結果：{len(quiz_list)} 問中 {correct_count} 問正解！")
+    
