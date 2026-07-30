@@ -173,12 +173,12 @@ quiz_list = [
             "C: 千本格子（せんぼんごうし）",
         ],
         "ans": "B: 木虫籠（きむすこ）",
-        "exp": "<ruby>金沢<rt>かなざわ</rt></ruby>の<ruby>町家<rt>まちや</rt></ruby><ruby>特有<rt>とくゆう</rt></ruby>の<ruby>細<rt>ほそ</rt></ruby>い<ruby>木格子<rt>きごうし</rt></ruby>のことで、<ruby>光<rt>ひかり</rt></ruby>を取り<ruby>入<rt>い</rt></ruby>れつつプライバシーを<ruby>守<rt>mamo</rt></ruby>る<ruby>工夫<rt>くふう</rt></ruby>がされています。",
+        "exp": "<ruby>金沢<rt>かなざわ</rt></ruby>の<ruby>町家<rt>まちや</rt></ruby><ruby>特有<rt>とくゆう</rt></ruby>の<ruby>細<rt>ほそ</rt></ruby>い<ruby>木格子<rt>きごうし</rt></ruby>のことで、<ruby>光<rt>ひかり</rt></ruby>を取り<ruby>入<rt>い</rt></ruby>れつつプライバシーを<ruby>守<rt>まも</rt></ruby>る<ruby>工夫<rt>くふう</rt></ruby>がされています。",
         "image_prefix": "kimusuko",
     },
     # ⑨ 既存：あわら温泉の足湯
     {
-        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>にんき</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
+        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>ninki</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
         "opts": [
             "A: 足湯（あしゆ）",
             "B: 温泉（おんせん）たまご作り場（つくりば）",
@@ -187,6 +187,7 @@ quiz_list = [
         "ans": "A: 足湯（あしゆ）",
         "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>足湯<rt>あしゆ</rt></ruby>はいくつかの<ruby>浴槽<rt>よくそう</rt></ruby>があり、<ruby>源泉<rt>げんせん</rt></ruby>かけ<ruby>流<rt>なが</rt></ruby>しの<ruby>湯<rt>ゆ</rt></ruby>を<ruby>無料<rt>むりょう</rt></ruby>でたのしめます。",
         "image_prefix": "onsen",
+        "answer_image_prefix": "asiyu",
     },
     # ⑩ 既存（ラスト）：関野先生の問題
     {
