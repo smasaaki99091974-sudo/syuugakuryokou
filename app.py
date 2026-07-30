@@ -1,271 +1,87 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ちほうの なまえ クイズ</title>
-  <style>
-    body {
-      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-      background-color: #fff9e6; /* かわいいパステルイエロー */
-      color: #555;
-      text-align: center;
-      padding: 20px;
-      margin: 0;
-    }
+import streamlit as st
 
-    h1 {
-      color: #ff8c00;
-      font-size: 28px;
-      background-color: #ffffff;
-      padding: 15px;
-      border-radius: 20px;
-      display: inline-block;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      border: 3px dashed #ffb74d;
-    }
+# ページの設定
+st.set_page_config(
+    page_title="しゅうがくりょこうの しおり",
+    page_icon="🚌",
+    layout="centered"
+)
 
-    .quiz-container {
-      background-color: #ffffff;
-      max-width: 500px;
-      margin: 20px auto;
-      padding: 25px;
-      border-radius: 25px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      border: 4px solid #ffd54f;
+# かわいいデザインと読みやすい文字サイズの設定（CSS）
+st.markdown("""
+    <style>
+    /* 全体の背景色とフォント設定 */
+    .stApp {
+        background-color: #FFF9F3;
+        font-family: "Hiragino Sans", "Meiryo", sans-serif;
     }
-
-    .question {
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      color: #333;
+    
+    /* カード風の白い枠線（CSSの文法エラーを修正した部分） */
+    .card {
+        background-color: #FFFFFF;
+        padding: 20px;
+        border-radius: 15px;
+        border: 3px solid #FFD1DC;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
-
-    /* フリガナ（ruby）を見やすく調整 */
+    
+    /* タイトルのスタイル */
+    .title-text {
+        color: #FF6F91;
+        font-size: 32px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    /* 本文の文字サイズ（大きめで見やすく） */
+    p, div, label, li {
+        font-size: 20px !important;
+        line-height: 1.6 !important;
+    }
+    
+    /* ルビ（フリガナ）のスタイル */
     ruby {
-      ruby-position: over;
+        font-size: 22px;
+        font-weight: bold;
     }
     rt {
-      font-size: 11px;
-      color: #e65100;
+        font-size: 13px;
+        color: #555555;
     }
+    </style>
+""", unsafe_allow_html=True)
 
-    .quiz-image {
-      max-width: 100%;
-      height: auto;
-      max-height: 200px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      border: 3px solid #ffe082;
-    }
+# アプリのタイトル
+st.markdown('<div class="title-text">🚌 <ruby>修学旅行<rt>しゅうがくりょこう</rt></ruby>の しおり 🌸</div>', unsafe_allow_html=True)
 
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+st.write("---")
 
-    .option-btn {
-      background-color: #81c784; /* パステルグリーン */
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: transform 0.1s, background-color 0.2s;
-      box-shadow: 0 4px 0 #66bb6a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
+# メインコンテンツ（カード表示）
+st.markdown("""
+<div class="card">
+    <h3>📅 <ruby>日程<rt>にってい</rt></ruby>の ごあんない</h3>
+    <p>
+        <ruby>日<rt>ひ</rt></ruby>ちじ：10<ruby>月<rt>がつ</rt></ruby> 15<ruby>日<rt>にち</rt></ruby>（<ruby>木<rt>もく</rt></ruby>）〜 10<ruby>月<rt>がつ</rt></ruby> 16<ruby>日<rt>にち</rt></ruby>（<ruby>金<rt>きん</rt></ruby>）<br>
+        <ruby>行<rt>い</rt></ruby>き<ruby>先<rt>さき</rt></ruby>：とうきょう・よこはま
+    </p>
+</div>
 
-    .option-btn:hover {
-      background-color: #66bb6a;
-    }
+<div class="card">
+    <h3>🎒 もちもの チェック</h3>
+    <p>
+        ・しおり<br>
+        ・サイフ（お<ruby>金<rt>かね</rt></ruby>）<br>
+        ・ハンカチ・ティッシュ<br>
+        ・きがえ
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
-    .option-btn:active {
-      transform: translateY(4px);
-      box-shadow: none;
-    }
+# 生徒が操作できる入力フォーム
+st.markdown("### 📝 <ruby>自分<rt>じぶん</rt></ruby>の <ruby>目標<rt>もくひょう</rt></ruby>")
+goal = st.text_input("たのしみに している ことを かいてね！", placeholder="れい：水族館で ペンギンを 見る")
 
-    /* ボタンの中の画像サイズ */
-    .option-img {
-      max-height: 40px;
-      width: auto;
-      border-radius: 5px;
-    }
-
-    .result {
-      margin-top: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      min-height: 36px;
-    }
-
-    .correct {
-      color: #ff4081; /* かわいいピンク */
-    }
-
-    .incorrect {
-      color: #1e88e5; /* 爽やかなブルー */
-    }
-
-    .next-btn {
-      margin-top: 20px;
-      background-color: #ff8a65;
-      color: white;
-      border: none;
-      padding: 10px 25px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 20px;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #e64a19;
-      display: none;
-    }
-
-    .next-btn:active {
-      transform: translateY(4px);
-      box-shadow: none;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>🗾 にほんの <ruby>地方<rt>ちほう</rt></ruby> クイズ 🗾</h1>
-
-  <div class="quiz-container">
-    <div id="question" class="question"></div>
-    <div id="image-container"></div>
-    <div id="options" class="options"></div>
-    <div id="result" class="result"></div>
-    <button id="next-btn" class="next-btn" onclick="nextQuestion()">つぎの <ruby>問題<rt>もんだい</rt></ruby>へ</button>
-  </div>
-
-  <script>
-    // クイズのデータ構造（問題ごとに画像や選択肢画像を設定可能）
-    const quizData = [
-      {
-        question: "1問目：<ruby>日本<rt>にほん</rt></ruby>で いちばん <ruby>北<rt>きた</rt></ruby>にある <ruby>地方<rt>ちほう</rt></ruby>は どこかな？",
-        image: null,
-        options: [
-          { text: "<ruby>北海道<rt>ほっかいどう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
-          { text: "<ruby>九州<rt>きゅうしゅう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
-          { text: "<ruby>関東<rt>かんとう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null }
-        ],
-        answer: 0
-      },
-      {
-        question: "2問目：とうきょうや かながわが ある <ruby>地方<rt>ちほう</rt></ruby>は どこかな？",
-        image: null,
-        options: [
-          { text: "<ruby>近畿<rt>きんき</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
-          { text: "<ruby>関東<rt>かんとう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
-          { text: "<ruby>東北<rt>とうほく</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null }
-        ],
-        answer: 1
-      },
-      {
-        question: "3問目：この <ruby>地方<rt>ちほう</rt></ruby>の なまえは なにかな？",
-        image: "hokuriku.png", // 問題画像
-        options: [
-          { text: "<ruby>北陸<rt>ほくりく</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
-          { text: "<ruby>東海<rt>とうかい</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
-          { text: "<ruby>関東<rt>かんとう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: "higasi.png" } // 解答（選択肢）の画像
-        ],
-        answer: 0
-      }
-    ];
-
-    let currentQuiz = 0;
-
-    const questionEl = document.getElementById('question');
-    const imageContainerEl = document.getElementById('image-container');
-    const optionsEl = document.getElementById('options');
-    const resultEl = document.getElementById('result');
-    const nextBtn = document.getElementById('next-btn');
-
-    function loadQuiz() {
-      // 画面のリセット
-      resultEl.innerHTML = '';
-      nextBtn.style.display = 'none';
-      optionsEl.innerHTML = '';
-      imageContainerEl.innerHTML = '';
-
-      const currentQuizData = quizData[currentQuiz];
-
-      // 問題文の設定
-      questionEl.innerHTML = currentQuizData.question;
-
-      // 問題画像の表示（画像が指定されている場合のみ）
-      if (currentQuizData.image) {
-        const img = document.createElement('img');
-        img.src = currentQuizData.image;
-        img.alt = "問題の画像";
-        img.className = "quiz-image";
-        imageContainerEl.appendChild(img);
-      }
-
-      // 選択肢ボタンの作成
-      currentQuizData.options.forEach((option, index) => {
-        const button = document.createElement('button');
-        button.className = 'option-btn';
-        
-        // テキストを設定
-        const textSpan = document.createElement('span');
-        textSpan.innerHTML = option.text;
-        button.appendChild(textSpan);
-
-        // 選択肢の中に画像が指定されている場合（3問目のhigasi画像など）
-        if (option.image) {
-          const optImg = document.createElement('img');
-          optImg.src = option.image;
-          optImg.alt = "選択肢の画像";
-          optImg.className = "option-img";
-          button.appendChild(optImg);
-        }
-
-        button.onclick = () => selectOption(index);
-        optionsEl.appendChild(button);
-      });
-    }
-
-    function selectOption(selectedIndex) {
-      const currentQuizData = quizData[currentQuiz];
-      const buttons = optionsEl.querySelectorAll('.option-btn');
-
-      // ボタンの無効化
-      buttons.forEach(btn => btn.disabled = true);
-
-      if (selectedIndex === currentQuizData.answer) {
-        resultEl.innerHTML = '<span class="correct">⭕ せいかい！ すごいね！</span>';
-      } else {
-        resultEl.innerHTML = '<span class="incorrect">❌ ざんねん！ もういちど かんがえてみよう！</span>';
-      }
-
-      nextBtn.style.display = 'inline-block';
-    }
-
-    function nextQuestion() {
-      currentQuiz++;
-      if (currentQuiz < quizData.length) {
-        loadQuiz();
-      } else {
-        // 全問終了時
-        questionEl.innerHTML = "🎉 クイズ しゅうりょう！";
-        imageContainerEl.innerHTML = '';
-        optionsEl.innerHTML = '<p style="font-size:20px; font-weight:bold;">ぜんぶの もんだいが おわったよ！<br>よく がんばったね！</p>';
-        resultEl.innerHTML = '';
-        nextBtn.style.display = 'none';
-      }
-    }
-
-    // 初回読み込み
-    loadQuiz();
-  </script>
-</body>
-</html>
+if goal:
+    st.success(f"いいね！「{goal}」を たのしもうね！")
