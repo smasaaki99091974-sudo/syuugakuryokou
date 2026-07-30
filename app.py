@@ -1,119 +1,235 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
-# 1. ページ全体の基本設定
-st.set_page_config(
-    page_title="しゅうがくりょこうの しおり",
-    page_icon="🚌",
-    layout="centered"
-)
+# 画面全体のレイアウト設定
+st.set_page_config(page_title="たのしい クイズアプリ", page_icon="✨", layout="centered")
 
-# 2. かわいいデザインとフリガナ用のCSS（デザイン設定）
-st.markdown("""
-<style>
-    /* 全体の背景色をやさしいパステルカラーに */
-    .stApp {
-        background-color: #FFF9F2;
+# HTML / CSS / JavaScript の定義
+html_code = """
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>たのしい クイズアプリ</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background-color: #FFF0F5; /* やさしいピンク */
+      color: #333333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 90vh;
+      margin: 0;
+      padding: 10px;
+      box-sizing: border-box;
     }
-    
-    /* 生徒が見やすい大きい文字と丸みのある枠線 */
-    .main-card {
-        background-color: #FFFFFF;
-        border-radius: 20px;
-        padding: 25px;
-        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4);
-        border: 3px solid #FFB6C1;
-        margin-bottom: 20px;
+
+    .quiz-card {
+      background-color: #FFFFFF;
+      border: 4px solid #FFB6C1;
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+      text-align: center;
     }
-    
-    /* タイトルの装飾 */
+
     h1 {
-        color: #FF6B81;
-        text-align: center;
-        font-size: 2.2rem !important;
+      color: #FF69B4;
+      font-size: 22px;
+      margin-bottom: 15px;
     }
 
-    /* フリガナ（ルビ）のスタイル設定 */
+    .question-number {
+      font-size: 16px;
+      font-weight: bold;
+      color: #4682B4;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background-color: #E0F7FA;
+      border: 2px solid #81D4FA;
+      border-radius: 12px;
+      padding: 12px 15px;
+      font-size: 17px;
+      font-weight: bold;
+      color: #006064;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover {
+      background-color: #B2EBF2;
+      transform: translateY(-2px);
+    }
+
+    .result-message {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 15px;
+      min-height: 36px;
+    }
+
+    .next-btn {
+      margin-top: 20px;
+      background-color: #FF9800;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 25px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+    }
+
+    .next-btn:hover {
+      background-color: #F57C00;
+    }
+
     ruby {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #333333;
+      ruby-align: center;
     }
+
     rt {
-        font-size: 0.8rem;
-        color: #FF4757;
-        font-weight: normal;
+      font-size: 11px;
+      color: #FF4081;
     }
-    
-    /* ボタンをかわいく大きく */
-    .stButton>button {
-        background-color: #FF7675;
-        color: white;
-        border-radius: 15px;
-        font-size: 1.3rem;
-        padding: 10px 25px;
-        border: none;
-        width: 100%;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  </style>
+</head>
+<body>
+
+<div class="quiz-card">
+  <h1>✨修学旅行＆恐竜クイズ✨</h1>
+  <div id="quiz-area">
+    <div class="question-number" id="q-num">だい1もん</div>
+    <div class="question-text" id="q-text"></div>
+    <div class="options" id="options-container"></div>
+    <div class="result-message" id="result-msg"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">つぎの もんだいへ ＞</button>
+  </div>
+</div>
+
+<script>
+  const quizData = [
+    {
+      question: "①<ruby>１日目<rt>いちにちめ</rt></ruby>に <ruby>行<rt>い</rt></ruby>くところは どこ？ 🐟",
+      options: ["越前松島水族館", "福井県立恐竜博物館", "ひがし茶屋街"],
+      answer: "越前松島水族館"
+    },
+    {
+      question: "②<ruby>２日目<rt>ふつかめ</rt></ruby>に <ruby>行<rt>い</rt></ruby>くところは どこ？ 🦖",
+      options: ["越前松島水族館", "福井県立恐竜博物館", "ひがし茶屋街"],
+      answer: "福井県立恐竜博物館"
+    },
+    {
+      question: "③<ruby>３日目<rt>みっかめ</rt></ruby>に <ruby>行<rt>い</rt></ruby>くところは？ 🍵",
+      options: ["越前松島水族館", "福井県立恐竜博物館", "ひがし茶屋街"],
+      answer: "ひがし茶屋街"
+    },
+    {
+      question: "④ティラノサウルスの <ruby>大<rt>おお</rt></ruby>きさは？ 📏",
+      options: ["１，軽自動車", "２，観光バス", "３，新幹線の車両"],
+      answer: "２，観光バス"
+    },
+    {
+      question: "⑤<ruby>福井県<rt>ふくいけん</rt></ruby>で <ruby>発見<rt>はっけん</rt></ruby>された <ruby>恐竜<rt>きょうりゅう</rt></ruby>は？ 🦴",
+      options: ["１，３種類", "２，６種類", "３，１０種類"],
+      answer: "２，６種類"
+    },
+    {
+      question: "⑥<ruby>恐竜<rt>きょうりゅう</rt></ruby>の <ruby>子孫<rt>しそん</rt></ruby>は どれでしょう。 🐦",
+      options: ["１，トカゲ／ワニ", "２，鳥", "３，哺乳類"],
+      answer: "２，鳥"
+    },
+    {
+      question: "⑦この キャラクターは なに？ ♨️",
+      options: ["湯巡権三（ゆめぐりごんぞう）", "あわら温泉マン", "恐竜はかせ"],
+      answer: "湯巡権三（ゆめぐりごんぞう）"
+    },
+    {
+      question: "⑧<ruby>関野<rt>せきの</rt></ruby><ruby>先生<rt>せんせい</rt></ruby>の <ruby>問題<rt>もんだい</rt></ruby> 💡",
+      options: ["選択肢１", "選択肢２", "選択肢３"],
+      answer: "選択肢１"
     }
-    .stButton>button:hover {
-        background-color: #FF6B81;
-        color: white;
+  ];
+
+  let currentQuestionIndex = 0;
+
+  function loadQuestion() {
+    const currentQuiz = quizData[currentQuestionIndex];
+    document.getElementById("q-num").textContent = `だい ${currentQuestionIndex + 1} もん（ぜん ${quizData.length} もん）`;
+    document.getElementById("q-text").innerHTML = currentQuiz.question;
+    
+    const optionsContainer = document.getElementById("options-container");
+    optionsContainer.innerHTML = "";
+    
+    document.getElementById("result-msg").textContent = "";
+    document.getElementById("next-btn").style.display = "none";
+
+    currentQuiz.options.forEach(option => {
+      const button = document.createElement("button");
+      button.className = "option-btn";
+      button.textContent = option;
+      button.onclick = () => checkAnswer(option, currentQuiz.answer);
+      optionsContainer.appendChild(button);
+    });
+  }
+
+  function checkAnswer(selected, correct) {
+    const buttons = document.querySelectorAll(".option-btn");
+    buttons.forEach(btn => btn.disabled = true);
+
+    const resultMsg = document.getElementById("result-msg");
+    if (selected === correct) {
+      resultMsg.innerHTML = "<span style='color: #4CAF50;'>⭕ せいかい！</span>";
+    } else {
+      resultMsg.innerHTML = `<span style='color: #F44336;'>❌ ざんねん…</span><br><span style='font-size:16px; color:#555;'>せいかいは: ${correct}</span>`;
     }
-</style>
-""", unsafe_allow_html=True)
 
+    document.getElementById("next-btn").style.display = "inline-block";
+  }
 
-# 3. アプリのメイン画面処理
-def main():
-    # ヘッダー画像・イラストの配置（パブリック画像URL）
-    st.image("https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800", use_column_width=True)
-    
-    # タイトル（HTMLの<ruby>タグを使って漢字にフリガナを配置）
-    st.markdown("""
-        <h1>
-            <ruby>修学旅行<rt>しゅうがくりょこう</rt></ruby>の 
-            <ruby>案内<rt>あんない</rt></ruby>
-        </h1>
-    """, unsafe_allow_html=True)
-    
-    st.write("---")
+  function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quizData.length) {
+      loadQuestion();
+    } else {
+      showFinalResult();
+    }
+  }
 
-    # カード型の案内エリア
-    st.markdown("""
-        <div class="main-card">
-            <h3>🚌 <ruby>行<rt>い</rt></ruby>き<ruby>先<rt>さき</rt></ruby></h3>
-            <p style="font-size: 1.4rem;"><b>とうきょう ディズニーランド</b></p>
-            <br>
-            <h3>⏰ <ruby>集合<rt>しゅうごう</rt></ruby><ruby>時間<rt>じかん</rt></ruby></h3>
-            <p style="font-size: 1.4rem;"><b>あさ 8<ruby>時<rt>じ</rt></ruby> 30<ruby>分<rt>ふん</rt></ruby></b></p>
-            <br>
-            <h3>🎒 もちもの</h3>
-            <ul style="font-size: 1.2rem; line-height: 2;">
-                <li>しおり</li>
-                <li>おさいふ（おすきなおこづかい）</li>
-                <li>ハンカチ・ティッシュ</li>
-                <li>すいとう</li>
-            </ul>
-        </div>
-    """, unsafe_allow_html=True)
+  function showFinalResult() {
+    document.getElementById("quiz-area").innerHTML = `
+      <h2>🎉 おつかれさまでした！ 🎉</h2>
+      <p style="font-size: 20px;">ぜんぶの もんだいが おわったよ！</p>
+      <button class="next-btn" style="display:inline-block;" onclick="location.reload()">もういちど チャレンジ</button>
+    `;
+  }
 
-    # インタラクティブ要素（持ち物チェック）
-    st.markdown("### 📝 じゅんび チェック")
-    
-    chk1 = st.checkbox("しおり を カバン に いれた")
-    chk2 = st.checkbox("おさいふ を いれた")
-    chk3 = st.checkbox("すいとう を いれた")
-    
-    if chk1 and chk2 and chk3:
-        st.balloons()
-        st.success("🎉 じゅんび かんりょう！ たのしんできてね！")
+  loadQuestion();
+</script>
 
-    # ボタンを押した時のイラスト反応
-    st.write("")
-    if st.button("✨ おたのしみ ボタン"):
-        st.write("🎈 たのしい おもいでを たくさん つくろうね！")
-        st.image("https://images.unsplash.com/photo-1513151233558-d860c5398176?w=600", use_column_width=True)
+</body>
+</html>
+"""
 
-
-if __name__ == "__main__":
-    main()
+# Streamlit上でHTMLを表示（高さは650pxに設定）
+components.html(html_code, height=650, scrolling=True)
