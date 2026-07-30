@@ -30,16 +30,21 @@ st.markdown("""
         background-color: #FFB6C1;
         color: white;
     }
-    /* ふりがな（ルビ）を見やすく調整 */
+    
+    /* ---- ルビ（フリガナ）のスタイル調整 ---- */
+    /* 漢字（本文）を大きく表示 */
     ruby {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
+        font-weight: bold;
+        line-height: 2.2; /* ルビと被らないように行間を確保 */
+    }
+    /* フリガナ（ルビ）を小さく・見やすい濃い青色に調整 */
+    rt {
+        font-size: 0.85rem;
+        color: #1A5276; /* 見やすい濃い青色 */
         font-weight: bold;
     }
-    rt {
-        font-size: 0.75rem;
-        color: #FF69B4;
-        font-weight: normal;
-    }
+    
     /* カスタム解説ボックス（HTMLルビ対応） */
     .explanation-box {
         background-color: #E6F3FF;
@@ -81,7 +86,7 @@ quiz_list = [
         "image_prefix": "kimusuko",
     },
     {
-        "q": "<ruby>越前松島水族館<rt>えちぜんまつしますいぞくかん</rt></ruby>で<ruby>大人気<rt>だいにんき</rt></ruby>の、<ruby>透明<rt>とうめい</rt></ruby>なアクリルガラスの<ruby>上<rt>うえ</rt></ruby>に<ruby>寝<rt>ね</rt></ruby>ころがって<ruby>海<rt>うみ</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<ruby>浮<rt>う</rt></ruby>いているような<ruby>体験<rt>たいけん</rt></ruby>ができるコーナーの<ruby>名前<rt>なまえ</rt></ruby>は？",
+        "q": "<ruby>越前松島水族館<rt>えちぜんまつしま すいぞくかん</rt></ruby>で<ruby>大人気<rt>だいにんき</rt></ruby>の、<ruby>透明<rt>とうめい</rt></ruby>なアクリルガラスの<ruby>上<rt>うえ</rt></ruby>に<ruby>寝<rt>ね</rt></ruby>ころがって<ruby>海<rt>うみ</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<ruby>浮<rt>う</rt></ruby>いているような<ruby>体験<rt>たいけん</rt></ruby>ができるコーナーの<ruby>名前<rt>なまえ</rt></ruby>は？",
         "opts": ["A: さんごの海（うみ）", "B: 海（うみ）の浮島（うきしま）", "C: 水上（すいじょう）さんぽ"],
         "ans": "A: さんごの海（うみ）",
         "exp": "<ruby>床<rt>ゆか</rt></ruby><ruby>一面<rt>いちめん</rt></ruby>が<ruby>透明<rt>とうめい</rt></ruby>なガラス<ruby>張<rt>ば</rt></ruby>りになっていて、<ruby>魚<rt>さかな</rt></ruby>たちが<ruby>泳<rt>およ</rt></ruby>ぐプールの上（うえ）に<ruby>寝<rt>ね</rt></ruby>そべることができます。",
