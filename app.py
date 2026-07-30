@@ -91,7 +91,8 @@ quiz_list = [
         ],
         "ans": "A: 越前松島水族館（えちぜんまつしますいぞくかん）",
         "exp": "1<ruby>日目<rt>にちめ</rt></ruby>は<ruby>越前松島水族館<rt>えちぜんまつしますいぞくかん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます！<ruby>楽<rt>たの</rt></ruby>しみですね。",
-        "image_prefix": "aquarium",
+        "image_prefix": "hokuriku",
+        "answer_image_prefix": "suizokukan",
     },
     # ② 2日目に行くところ
     {
@@ -103,7 +104,8 @@ quiz_list = [
         ],
         "ans": "B: 福井県立恐竜博物館（ふくいけんりつきょうりゅうはくぶつかん）",
         "exp": "2<ruby>日目<rt>にちめ</rt></ruby>は<ruby>大人気<rt>だいにんき</rt></ruby>の<ruby>福井県立恐竜博物館<rt>ふくいけんりつきょうりゅうはくぶつかん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます！",
-        "image_prefix": "museum",
+        "image_prefix": "bus",
+        "answer_image_prefix": "hakubutukan",
     },
     # ③ 3日目に行くところ
     {
@@ -113,9 +115,10 @@ quiz_list = [
             "B: 越前松島水族館（えちぜんまつしますいぞくかん）",
             "C: あわら温泉（おんせん）",
         ],
-        "ans": "A: ひ发し茶屋街（ちゃやがい）",
+        "ans": "A: ひがし茶屋街（ちゃやがい）",
         "exp": "3<ruby>日目<rt>にちめ</rt></ruby>は<ruby>風情<rt>ふぜい</rt></ruby>ある<ruby>金沢<rt>かなざわ</rt></ruby>の「ひがし<ruby>茶屋街<rt>ちゃやがい</rt></ruby>」を<ruby>散策<rt>さんさく</rt></ruby>します！",
-        "image_prefix": "kimusuko",
+        "image_prefix": "hokuriku",
+        "answer_image_prefix": "higasi",
     },
     # ④ ティラノサウルスの大きさ
     {
@@ -159,7 +162,7 @@ quiz_list = [
         ],
         "ans": "A: 湯巡権三（ゆめぐりごんぞう）",
         "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>キャラクター<rt>きゃらくたー</rt></ruby>「<ruby>湯巡権三<rt>ゆめぐりごんぞう</rt></ruby>」さんです！",
-        "image_prefix": "gonzo",  # GitHubに gonzo.png または gonzo.jpg を用意してください
+        "image_prefix": "gonzo",
     },
     # ⑧ 既存：東茶屋街の格子
     {
@@ -170,7 +173,7 @@ quiz_list = [
             "C: 千本格子（せんぼんごうし）",
         ],
         "ans": "B: 木虫籠（きむすこ）",
-        "exp": "<ruby>金沢<rt>かなざわ</rt></ruby>の<ruby>町家<rt>まちや</rt></ruby><ruby>特有<rt>とくゆう</rt></ruby>の<ruby>細<rt>ほそ</rt></ruby>い<ruby>木格子<rt>きごうし</rt></ruby>のことで、<ruby>光<rt>ひかり</rt></ruby>を取り<ruby>入<rt>い</rt></ruby>れつつプライバシーを<ruby>守<rt>まも</rt></ruby>る<ruby>工夫<rt>くふう</rt></ruby>がされています。",
+        "exp": "<ruby>金沢<rt>かなざわ</rt></ruby>の<ruby>町家<rt>まちや</rt></ruby><ruby>特有<rt>とくゆう</rt></ruby>の<ruby>細<rt>ほそ</rt></ruby>い<ruby>木格子<rt>きごうし</rt></ruby>のことで、<ruby>光<rt>ひかり</rt></ruby>を取り<ruby>入<rt>い</rt></ruby>れつつプライバシーを<ruby>守<rt>mamo</rt></ruby>る<ruby>工夫<rt>くふう</rt></ruby>がされています。",
         "image_prefix": "kimusuko",
     },
     # ⑨ 既存：あわら温泉の足湯
@@ -191,10 +194,10 @@ quiz_list = [
         "opts": ["〇", "×"],
         "ans": "〇",
         "exp": "<ruby>関野<rt>せきの</rt></ruby><ruby>先生<rt>せんせい</rt></ruby>はとってもかっこいいです！",
-        "image_prefix": None,  # 出題時には画像なし（回答後に結果画像を表示）
+        "image_prefix": None,
         "result_images": {
-            "correct": "tenshi",  # 正解（〇）：天使のイラスト
-            "incorrect": "enma",  # 不正解（×）：エンマ大王のイラスト
+            "correct": "tenshi",
+            "incorrect": "enma",
         },
     },
 ]
@@ -239,7 +242,7 @@ else:
     st.progress((current_idx) / total_q)
     st.caption(f"だい {current_idx + 1} もん / ぜん {total_q} もん")
 
-    # 画像の取得と表示
+    # 問題文の上の画像表示（出題時）
     if q_data.get("image_prefix"):
         img = get_quiz_image(q_data["image_prefix"])
         if img is not None:
@@ -274,6 +277,12 @@ else:
                 st.error(
                     f"❌ ざんねん... 不正解（ふせいかい） （あなたのこたえ: {user_choice} / せいかい: {q_data['ans']}）"
                 )
+
+            # 解答後の画像表示（指定がある場合）
+            if "answer_image_prefix" in q_data:
+                ans_img = get_quiz_image(q_data["answer_image_prefix"])
+                if ans_img is not None:
+                    st.image(ans_img, use_container_width=True)
 
             # 最終問題などの特別な結果イラスト表示処理
             if "result_images" in q_data:
