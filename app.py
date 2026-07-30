@@ -131,6 +131,7 @@ quiz_list = [
         "ans": "2: 観光（かんこう）バス",
         "exp": "ティラノサウルスは<ruby>全長<rt>ぜんちょう</rt></ruby>およそ12〜13メートルあり、<ruby>大型<rt>おおがた</rt></ruby>の<ruby>観光<rt>かんこう</rt></ruby>バスとほぼ<ruby>同<rt>おな</rt></ruby>じくらいの<ruby>大<rt>おお</rt></ruby>きさです！",
         "image_prefix": "museum",
+        "answer_image_prefix": "hikaku",
     },
     # ⑤ 福井県で発見された恐竜の数
     {
@@ -178,7 +179,7 @@ quiz_list = [
     },
     # ⑨ 既存：あわら温泉の足湯
     {
-        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>ninki</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
+        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>にんき</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
         "opts": [
             "A: 足湯（あしゆ）",
             "B: 温泉（おんせん）たまご作り場（つくりば）",
