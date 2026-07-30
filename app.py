@@ -15,15 +15,17 @@ st.markdown(
     .stApp {
         background-color: #FFF9F2;
     }
-    /* ボタンを丸く・かわいくする */
+    
+    /* ---- ボタン（選択肢など）を大きく・丸く・かわいくする ---- */
     .stButton>button {
         border-radius: 20px;
         background-color: #FFE4E1;
         color: #4A4A4A;
         font-weight: bold;
         border: 2px solid #FFB6C1;
-        padding: 10px 20px;
-        font-size: 1.1rem;
+        padding: 12px 24px;
+        font-size: 1.4rem; /* 選択肢の文字を大きく調整（もとの1.1remから拡大） */
+        line-height: 1.5;   /* 文字の天地にゆとりを持たせる */
     }
     .stButton>button:hover {
         background-color: #FFB6C1;
