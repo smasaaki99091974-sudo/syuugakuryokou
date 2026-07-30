@@ -158,12 +158,13 @@ quiz_list = [
         "q": "このキャラクターの<ruby>名前<rt>なまえ</rt></ruby>はなにでしょう？",
         "opts": [
             "A: 湯巡権三（ゆめぐりごんぞう）",
-            "B: 湯巡令奈（ゆめぐりれな）",
-            "C: ひゃくまんさん（ひゃくまんさん）",
+            "B: あわら湯たろう（ゆたろう）",
+            "C: 温泉ごんちゃん（おんせんごんちゃん）",
         ],
         "ans": "A: 湯巡権三（ゆめぐりごんぞう）",
         "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>キャラクター<rt>きゃらくたー</rt></ruby>「<ruby>湯巡権三<rt>ゆめぐりごんぞう</rt></ruby>」さんです！",
         "image_prefix": "gonzo",
+        "answer_image_prefix": "kawasima",
     },
     # ⑧ 既存：東茶屋街の格子
     {
@@ -179,7 +180,7 @@ quiz_list = [
     },
     # ⑨ 既存：あわら温泉の足湯
     {
-        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>にんき</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
+        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>ninki</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
         "opts": [
             "A: 足湯（あしゆ）",
             "B: 温泉（おんせん）たまご作り場（つくりば）",
