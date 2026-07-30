@@ -1,309 +1,271 @@
-import os
-from PIL import Image
-import streamlit as st
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ちほうの なまえ クイズ</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background-color: #fff9e6; /* かわいいパステルイエロー */
+      color: #555;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
 
-# ---- ページの設定（タイトルとアイコン） ----
-st.set_page_config(
-    page_title="金沢・福井 修学旅行クイズ", page_icon="🏯", layout="centered"
-)
+    h1 {
+      color: #ff8c00;
+      font-size: 28px;
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 20px;
+      display: inline-block;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: 3px dashed #ffb74d;
+    }
 
-# ---- デザインをかわいくするCSS（カスタムスタイル） ----
-st.markdown(
-    """
-    <style>
-    /* 全体の背景色をやさしい色にする */
-    .stApp {
-        background-color: #FFF9F2;
+    .quiz-container {
+      background-color: #ffffff;
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 25px;
+      border-radius: 25px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border: 4px solid #ffd54f;
     }
-    
-    /* ---- ボタン（選択肢など）を大きく・丸く・かわいくする ---- */
-    .stButton>button {
-        border-radius: 20px;
-        background-color: #FFE4E1;
-        color: #4A4A4A;
-        font-weight: bold;
-        border: 2px solid #FFB6C1;
-        padding: 12px 24px;
-        font-size: 1.4rem; /* 選択肢の文字を大きく調整 */
-        line-height: 1.5;   /* 文字の天地にゆとりを持たせる */
+
+    .question {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #333;
     }
-    .stButton>button:hover {
-        background-color: #FFB6C1;
-        color: white;
-    }
-    
-    /* ---- ルビ（フリガナ）のスタイル調整 ---- */
-    /* 漢字（本文）を大きく表示 */
+
+    /* フリガナ（ruby）を見やすく調整 */
     ruby {
-        font-size: 1.4rem;
-        font-weight: bold;
-        line-height: 2.2; /* ルビと被らないように行間を確保 */
+      ruby-position: over;
     }
-    /* フリガナ（ルビ）を小さく・見やすい濃い青色に調整 */
     rt {
-        font-size: 0.85rem;
-        color: #1A5276; /* 見やすい濃い青色 */
-        font-weight: bold;
+      font-size: 11px;
+      color: #e65100;
     }
-    
-    /* カスタム解説ボックス（HTMLルビ対応） */
-    .explanation-box {
-        background-color: #E6F3FF;
-        border: 2px solid #B0E0E6;
-        border-radius: 15px;
-        padding: 15px;
-        margin-top: 15px;
-        margin-bottom: 15px;
-        color: #333333;
-        font-size: 1.1rem;
+
+    .quiz-image {
+      max-width: 100%;
+      height: auto;
+      max-height: 200px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border: 3px solid #ffe082;
     }
-    </style>
-""",
-    unsafe_allow_html=True,
-)
 
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-# ---- 各問題の画像（写真・イラスト）を読み込む関数 ----
-def get_quiz_image(file_prefix):
-    jpg_path = f"{file_prefix}.jpg"
-    png_path = f"{file_prefix}.png"
+    .option-btn {
+      background-color: #81c784; /* パステルグリーン */
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: transform 0.1s, background-color 0.2s;
+      box-shadow: 0 4px 0 #66bb6a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
 
-    if os.path.exists(png_path):
-        return Image.open(png_path)
-    elif os.path.exists(jpg_path):
-        return Image.open(jpg_path)
-    else:
-        st.warning(
-            f"がぞうファイル '{file_prefix}.png' (または .jpg) が見つかりません。GitHubにアップロードしてください。"
-        )
-        return None
+    .option-btn:hover {
+      background-color: #66bb6a;
+    }
 
+    .option-btn:active {
+      transform: translateY(4px);
+      box-shadow: none;
+    }
 
-# ---- クイズのデータ（全10問） ----
-quiz_list = [
-    # ① 1日目に行くところ
-    {
-        "q": "1<ruby>日目<rt>にちめ</rt></ruby>に<ruby>行<rt>い</rt></ruby>くところはどこでしょう？",
-        "opts": [
-            "A: 越前松島水族館（えちぜんまつしますいぞくかん）",
-            "B: 東茶屋街（ひがしちゃやがい）",
-            "C: 恐竜博物館（きょうりゅうはくぶつかん）",
+    /* ボタンの中の画像サイズ */
+    .option-img {
+      max-height: 40px;
+      width: auto;
+      border-radius: 5px;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      min-height: 36px;
+    }
+
+    .correct {
+      color: #ff4081; /* かわいいピンク */
+    }
+
+    .incorrect {
+      color: #1e88e5; /* 爽やかなブルー */
+    }
+
+    .next-btn {
+      margin-top: 20px;
+      background-color: #ff8a65;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #e64a19;
+      display: none;
+    }
+
+    .next-btn:active {
+      transform: translateY(4px);
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🗾 にほんの <ruby>地方<rt>ちほう</rt></ruby> クイズ 🗾</h1>
+
+  <div class="quiz-container">
+    <div id="question" class="question"></div>
+    <div id="image-container"></div>
+    <div id="options" class="options"></div>
+    <div id="result" class="result"></div>
+    <button id="next-btn" class="next-btn" onclick="nextQuestion()">つぎの <ruby>問題<rt>もんだい</rt></ruby>へ</button>
+  </div>
+
+  <script>
+    // クイズのデータ構造（問題ごとに画像や選択肢画像を設定可能）
+    const quizData = [
+      {
+        question: "1問目：<ruby>日本<rt>にほん</rt></ruby>で いちばん <ruby>北<rt>きた</rt></ruby>にある <ruby>地方<rt>ちほう</rt></ruby>は どこかな？",
+        image: null,
+        options: [
+          { text: "<ruby>北海道<rt>ほっかいどう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
+          { text: "<ruby>九州<rt>きゅうしゅう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
+          { text: "<ruby>関東<rt>かんとう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null }
         ],
-        "ans": "A: 越前松島水族館（えちぜんまつしますいぞくかん）",
-        "exp": "1<ruby>日目<rt>にちめ</rt></ruby>は<ruby>越前松島水族館<rt>えちぜんまつしますいぞくかん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます！<ruby>楽<rt>たの</rt></ruby>しみですね。",
-        "image_prefix": "aquarium",
-    },
-    # ② 2日目に行くところ
-    {
-        "q": "2<ruby>日目<rt>にちめ</rt></ruby>に<ruby>行<rt>い</rt></ruby>くところはどこでしょう？",
-        "opts": [
-            "A: 金沢城公園（かなざわじょうこうえん）",
-            "B: 福井県立恐竜博物館（ふくいけんりつきょうりゅうはくぶつかん）",
-            "C: 湯町広場（ゆまちひろば）",
+        answer: 0
+      },
+      {
+        question: "2問目：とうきょうや かながわが ある <ruby>地方<rt>ちほう</rt></ruby>は どこかな？",
+        image: null,
+        options: [
+          { text: "<ruby>近畿<rt>きんき</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
+          { text: "<ruby>関東<rt>かんとう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
+          { text: "<ruby>東北<rt>とうほく</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null }
         ],
-        "ans": "B: 福井県立恐竜博物館（ふくいけんりつきょうりゅうはくぶつかん）",
-        "exp": "2<ruby>日目<rt>にちめ</rt></ruby>は<ruby>大人気<rt>だいにんき</rt></ruby>の<ruby>福井県立恐竜博物館<rt>ふくいけんりつきょうりゅうはくぶつかん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます！",
-        "image_prefix": "museum",
-    },
-    # ③ 3日目に行くところ
-    {
-        "q": "3<ruby>日目<rt>にちめ</rt></ruby>に<ruby>行<rt>い</rt></ruby>くところはどこでしょう？",
-        "opts": [
-            "A: ひがし茶屋街（ちゃやがい）",
-            "B: 越前松島水族館（えちぜんまつしますいぞくかん）",
-            "C: あわら温泉（おんせん）",
+        answer: 1
+      },
+      {
+        question: "3問目：この <ruby>地方<rt>ちほう</rt></ruby>の なまえは なにかな？",
+        image: "hokuriku.png", // 問題画像
+        options: [
+          { text: "<ruby>北陸<rt>ほくりく</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
+          { text: "<ruby>東海<rt>とうかい</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: null },
+          { text: "<ruby>関東<rt>かんとう</rt></ruby><ruby>地方<rt>ちほう</rt></ruby>", image: "higasi.png" } // 解答（選択肢）の画像
         ],
-        "ans": "A: ひ发し茶屋街（ちゃやがい）",
-        "exp": "3<ruby>日目<rt>にちめ</rt></ruby>は<ruby>風情<rt>ふぜい</rt></ruby>ある<ruby>金沢<rt>かなざわ</rt></ruby>の「ひがし<ruby>茶屋街<rt>ちゃやがい</rt></ruby>」を<ruby>散策<rt>さんさく</rt></ruby>します！",
-        "image_prefix": "kimusuko",
-    },
-    # ④ ティラノサウルスの大きさ
-    {
-        "q": "ティラノサウルスの<ruby>大<rt>おお</rt></ruby>きさはどれくらいでしょう？",
-        "opts": [
-            "1: 軽自動車（けいじどうしゃ）",
-            "2: 観光（かんこう）バス",
-            "3: 新幹線（しんかんせん）の車両（しゃりょう）",
-        ],
-        "ans": "2: 観光（かんこう）バス",
-        "exp": "ティラノサウルスは<ruby>全長<rt>ぜんちょう</rt></ruby>およそ12〜13メートルあり、<ruby>大型<rt>おおがた</rt></ruby>の<ruby>観光<rt>かんこう</rt></ruby>バスとほぼ<ruby>同<rt>おな</rt></ruby>じくらいの<ruby>大<rt>おお</rt></ruby>きさです！",
-        "image_prefix": "museum",
-    },
-    # ⑤ 福井県で発見された恐竜の数
-    {
-        "q": "<ruby>福井県<rt>ふくいけん</rt></ruby>で<ruby>発見<rt>はっけん</rt></ruby>された<ruby>恐竜<rt>きょうりゅう</rt></ruby>は<ruby>何種類<rt>なんしゅるい</rt></ruby>でしょう？",
-        "opts": ["1: 3種類（しゅるい）", "2: 6種類（しゅるい）", "3: 10種類（しゅるい）"],
-        "ans": "2: 6種類（しゅるい）",
-        "exp": "<ruby>福井県<rt>ふくいけん</rt></ruby>ではフクイラプトルやフクイサウルスなど、これまでに6<ruby>種類<rt>しゅるい</rt></ruby>の新種（しんしゅ）の<ruby>恐竜<rt>きょうりゅう</rt></ruby>が<ruby>発見<rt>はっけん</rt></ruby>されています！",
-        "image_prefix": "museum",
-    },
-    # ⑥ 恐竜の子孫
-    {
-        "q": "<ruby>恐竜<rt>きょうりゅう</rt></ruby>の<ruby>子孫<rt>しそん</rt></ruby>はどれでしょう？",
-        "opts": [
-            "1: トカゲ／ワニ",
-            "2: 鳥（とり）",
-            "3: 哺乳類（ほにゅうるい）",
-        ],
-        "ans": "2: 鳥（とり）",
-        "exp": "じつは<ruby>恐竜<rt>きょうりゅう</rt></ruby>（<ruby>獣脚類<rt>じゅうきゃくるい</rt></ruby>）の<ruby>一部<rt>いちぶ</rt></ruby>が<ruby>進化<rt>しんか</rt></ruby>したものが、いまの<ruby>鳥<rt>とり</rt></ruby>たちです！",
-        "image_prefix": "museum",
-    },
-    # ⑦ キャラクターの名前
-    {
-        "q": "このキャラクターの<ruby>名前<rt>なまえ</rt></ruby>はなにでしょう？",
-        "opts": [
-            "A: 湯巡権三（ゆめぐりごんぞう）",
-            "B: あわら湯たろう（ゆたろう）",
-            "C: 温泉ごんちゃん（おんせんごんちゃん）",
-        ],
-        "ans": "A: 湯巡権三（ゆめぐりごんぞう）",
-        "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>キャラクター<rt>きゃらくたー</rt></ruby>「<ruby>湯巡権三<rt>ゆめぐりごんぞう</rt></ruby>」さんです！",
-        "image_prefix": "gonzo",  # GitHubに gonzo.png または gonzo.jpg を用意してください
-    },
-    # ⑧ 既存：東茶屋街の格子
-    {
-        "q": "<ruby>東茶屋街<rt>ひがしちゃやがい</rt></ruby>の<ruby>美<rt>うつく</rt></ruby>しい<ruby>建物<rt>たてもの</rt></ruby>に<ruby>見<rt>み</rt></ruby>られる、<ruby>外<rt>そと</rt></ruby>から<ruby>中<rt>なか</rt></ruby>が<ruby>見<rt>み</rt></ruby>えにくく、<ruby>中<rt>なか</rt></ruby>から<ruby>外<rt>そと</rt></ruby>が<ruby>見<rt>み</rt></ruby>えやすい<ruby>木製<rt>もくせい</rt></ruby>の<ruby>格子<rt>こうし</rt></ruby>を<ruby>何<rt>なに</rt></ruby>と<ruby>呼<rt>よ</rt></ruby>ぶでしょう？",
-        "opts": [
-            "A: 出格子（でごうし）",
-            "B: 木虫籠（きむすこ）",
-            "C: 千本格子（せんぼんごうし）",
-        ],
-        "ans": "B: 木虫籠（きむすこ）",
-        "exp": "<ruby>金沢<rt>かなざわ</rt></ruby>の<ruby>町家<rt>まちや</rt></ruby><ruby>特有<rt>とくゆう</rt></ruby>の<ruby>細<rt>ほそ</rt></ruby>い<ruby>木格子<rt>きごうし</rt></ruby>のことで、<ruby>光<rt>ひかり</rt></ruby>を取り<ruby>入<rt>い</rt></ruby>れつつプライバシーを<ruby>守<rt>まも</rt></ruby>る<ruby>工夫<rt>くふう</rt></ruby>がされています。",
-        "image_prefix": "kimusuko",
-    },
-    # ⑨ 既存：あわら温泉の足湯
-    {
-        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>にんき</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
-        "opts": [
-            "A: 足湯（あしゆ）",
-            "B: 温泉（おんせん）たまご作り場（つくりば）",
-            "C: 温泉（おんせん）プール",
-        ],
-        "ans": "A: 足湯（あしゆ）",
-        "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>足湯<rt>あしゆ</rt></ruby>はいくつかの<ruby>浴槽<rt>よくそう</rt></ruby>があり、<ruby>源泉<rt>げんせん</rt></ruby>かけ<ruby>流<rt>なが</rt></ruby>しの<ruby>湯<rt>ゆ</rt></ruby>を<ruby>無料<rt>むりょう</rt></ruby>でたのしめます。",
-        "image_prefix": "onsen",
-    },
-    # ⑩ 既存（ラスト）：関野先生の問題
-    {
-        "q": "<ruby>関野<rt>せきの</rt></ruby><ruby>先生<rt>せんせい</rt></ruby>はかっこいい。○か×か",
-        "opts": ["〇", "×"],
-        "ans": "〇",
-        "exp": "<ruby>関野<rt>せきの</rt></ruby><ruby>先生<rt>せんせい</rt></ruby>はとってもかっこいいです！",
-        "image_prefix": None,  # 出題時には画像なし（回答後に結果画像を表示）
-        "result_images": {
-            "correct": "tenshi",  # 正解（〇）：天使のイラスト
-            "incorrect": "enma",  # 不正解（×）：エンマ大王のイラスト
-        },
-    },
-]
+        answer: 0
+      }
+    ];
 
-# ---- セッション状態の管理 ----
-if "current_q" not in st.session_state:
-    st.session_state.current_q = 0
-if "score" not in st.session_state:
-    st.session_state.score = 0
-if "answered" not in st.session_state:
-    st.session_state.answered = False
-if "selected_opt" not in st.session_state:
-    st.session_state.selected_opt = None
+    let currentQuiz = 0;
 
-st.title("🏯 かなざわ・ふくい しゅうがくりょこうクイズ")
+    const questionEl = document.getElementById('question');
+    const imageContainerEl = document.getElementById('image-container');
+    const optionsEl = document.getElementById('options');
+    const resultEl = document.getElementById('result');
+    const nextBtn = document.getElementById('next-btn');
 
-total_q = len(quiz_list)
-current_idx = st.session_state.current_q
+    function loadQuiz() {
+      // 画面のリセット
+      resultEl.innerHTML = '';
+      nextBtn.style.display = 'none';
+      optionsEl.innerHTML = '';
+      imageContainerEl.innerHTML = '';
 
-# ---- 全問題終了画面 ----
-if current_idx >= total_q:
-    st.balloons()
-    st.header("🎉 クイズ おわり！")
-    st.subheader(
-        f"あなたのスコア: {total_q} もん ちゅう {st.session_state.score} もん せいかい"
-    )
+      const currentQuizData = quizData[currentQuiz];
 
-    if st.button(
-        "さいしょから もういちど ちょうせんする", type="primary", key="restart"
-    ):
-        st.session_state.current_q = 0
-        st.session_state.score = 0
-        st.session_state.answered = False
-        st.session_state.selected_opt = None
-        st.rerun()
+      // 問題文の設定
+      questionEl.innerHTML = currentQuizData.question;
 
-# ---- 問題表示画面 ----
-else:
-    q_data = quiz_list[current_idx]
+      // 問題画像の表示（画像が指定されている場合のみ）
+      if (currentQuizData.image) {
+        const img = document.createElement('img');
+        img.src = currentQuizData.image;
+        img.alt = "問題の画像";
+        img.className = "quiz-image";
+        imageContainerEl.appendChild(img);
+      }
 
-    # 進捗バーを表示
-    st.progress((current_idx) / total_q)
-    st.caption(f"だい {current_idx + 1} もん / ぜん {total_q} もん")
+      // 選択肢ボタンの作成
+      currentQuizData.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        
+        // テキストを設定
+        const textSpan = document.createElement('span');
+        textSpan.innerHTML = option.text;
+        button.appendChild(textSpan);
 
-    # 画像の取得と表示
-    if q_data.get("image_prefix"):
-        img = get_quiz_image(q_data["image_prefix"])
-        if img is not None:
-            st.image(img, use_container_width=True)
+        // 選択肢の中に画像が指定されている場合（3問目のhigasi画像など）
+        if (option.image) {
+          const optImg = document.createElement('img');
+          optImg.src = option.image;
+          optImg.alt = "選択肢の画像";
+          optImg.className = "option-img";
+          button.appendChild(optImg);
+        }
 
-    # 問題文
-    st.markdown(f"### {q_data['q']}", unsafe_allow_html=True)
+        button.onclick = () => selectOption(index);
+        optionsEl.appendChild(button);
+      });
+    }
 
-    # 回答エリア
-    answer_container = st.container()
+    function selectOption(selectedIndex) {
+      const currentQuizData = quizData[currentQuiz];
+      const buttons = optionsEl.querySelectorAll('.option-btn');
 
-    with answer_container:
-        if not st.session_state.answered:
-            # 回答選択用ボタン
-            for i, opt in enumerate(q_data["opts"]):
-                if st.button(
-                    opt, key=f"q_{current_idx}_opt_{i}", use_container_width=True
-                ):
-                    st.session_state.selected_opt = opt
-                    st.session_state.answered = True
-                    if opt == q_data["ans"]:
-                        st.session_state.score += 1
-                    st.rerun()
-        else:
-            # 回答後：結果と解説の表示
-            user_choice = st.session_state.selected_opt
-            is_correct = user_choice == q_data["ans"]
+      // ボタンの無効化
+      buttons.forEach(btn => btn.disabled = true);
 
-            if is_correct:
-                st.success(f"⭕️ せいかい！ （あなたのこたえ: {user_choice}）")
-            else:
-                st.error(
-                    f"❌ ざんねん... 不正解（ふせいかい） （あなたのこたえ: {user_choice} / せいかい: {q_data['ans']}）"
-                )
+      if (selectedIndex === currentQuizData.answer) {
+        resultEl.innerHTML = '<span class="correct">⭕ せいかい！ すごいね！</span>';
+      } else {
+        resultEl.innerHTML = '<span class="incorrect">❌ ざんねん！ もういちど かんがえてみよう！</span>';
+      }
 
-            # 最終問題などの特別な結果イラスト表示処理
-            if "result_images" in q_data:
-                res_prefix = (
-                    q_data["result_images"]["correct"]
-                    if is_correct
-                    else q_data["result_images"]["incorrect"]
-                )
-                res_img = get_quiz_image(res_prefix)
-                if res_img is not None:
-                    st.image(res_img, width=200)
+      nextBtn.style.display = 'inline-block';
+    }
 
-            # 解説ボックス
-            st.markdown(
-                f"""
-                <div class="explanation-box">
-                    💡 <b>かいせつ:</b><br>{q_data['exp']}
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+    function nextQuestion() {
+      currentQuiz++;
+      if (currentQuiz < quizData.length) {
+        loadQuiz();
+      } else {
+        // 全問終了時
+        questionEl.innerHTML = "🎉 クイズ しゅうりょう！";
+        imageContainerEl.innerHTML = '';
+        optionsEl.innerHTML = '<p style="font-size:20px; font-weight:bold;">ぜんぶの もんだいが おわったよ！<br>よく がんばったね！</p>';
+        resultEl.innerHTML = '';
+        nextBtn.style.display = 'none';
+      }
+    }
 
-            # 次の問題へ進むボタン
-            if st.button(
-                "つぎの もんだいへ ➔",
-                type="primary",
-                key=f"next_{current_idx}",
-                use_container_width=True,
-            ):
-                st.session_state.current_q += 1
-                st.session_state.answered = False
-                st.session_state.selected_opt = None
-                st.rerun()
+    // 初回読み込み
+    loadQuiz();
+  </script>
+</body>
+</html>
