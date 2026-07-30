@@ -79,7 +79,7 @@ def get_quiz_image(file_prefix):
         return None
 
 
-# ---- クイズのデータ（全5問） ----
+# ---- クイズのデータ（全6問） ----
 quiz_list = [
     {
         "q": "<ruby>東<rt>ひがし</rt></ruby><ruby>茶屋街<rt>ちゃやがい</rt></ruby>の<ruby>美<rt>うつく</rt></ruby>しい<ruby>建物<rt>たてもの</rt></ruby>に<ruby>見<rt>み</rt></ruby>られる、<ruby>外<rt>そと</rt></ruby>から<ruby>中<rt>なか</rt></ruby>が<ruby>見<rt>み</rt></ruby>えにくく、<ruby>中<rt>なか</rt></ruby>から<ruby>外<rt>そと</rt></ruby>が<ruby>見<rt>み</rt></ruby>えやすい<ruby>木製<rt>もくせい</rt></ruby>の<ruby>格子<rt>こうし</rt></ruby>を<ruby>何<rt>なに</rt></ruby>と<ruby>呼<rt>よ</rt></ruby>ぶでしょう？",
@@ -134,6 +134,21 @@ quiz_list = [
         "result_images": {
             "correct": "tenshi",  # 正解（〇）：天使のイラスト
             "incorrect": "enma",  # 不正解（×）：エンマ大王のイラスト
+        },
+    },
+    {
+        "q": "このキャラクターはなに？",
+        "opts": [
+            "A: 湯巡権三（ゆめぐりごんぞう）",
+            "B: あわら湯太朗（ゆたろう）",
+            "C: 温泉わくわくくん",
+        ],
+        "ans": "A: 湯巡権三（ゆめぐりごんぞう）",
+        "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>のキャラクター「<ruby>湯巡権三<rt>ゆめぐりごんぞう</rt></ruby>」です！",
+        "image_prefix": None,  # 出題時には画像なし
+        "result_images": {
+            "correct": "gonzo",  # 正解時：湯巡権三のイラスト
+            "incorrect": "gonzo",  # 不正解時も湯巡権三を表示して見せる
         },
     },
 ]
@@ -214,7 +229,7 @@ else:
                     f"❌ ざんねん... 不正解（ふせいかい） （あなたのこたえ: {user_choice} / せいかい: {q_data['ans']}）"
                 )
 
-            # 5問目のように回答後に特別な結果イラストを表示する場合の処理
+            # 回答後に結果イラストを表示する場合の処理
             if "result_images" in q_data:
                 res_prefix = (
                     q_data["result_images"]["correct"]
