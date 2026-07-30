@@ -71,7 +71,7 @@ def get_quiz_image(file_prefix):
         return None
 
 
-# ---- クイズのデータ（漢字にルビ <ruby>漢字<rt>かんじ</rt></ruby> を挿入） ----
+# ---- クイズのデータ ----
 quiz_list = [
     {
         "q": "<ruby>東<rt>ひがし</rt></ruby><ruby>茶屋街<rt>ちゃやがい</rt></ruby>の<ruby>美<rt>うつく</rt></ruby>しい<ruby>建物<rt>たてもの</rt></ruby>に<ruby>見<rt>み</rt></ruby>られる、<ruby>外<rt>そと</rt></ruby>から<ruby>中<rt>なか</rt></ruby>が<ruby>見<rt>み</rt></ruby>えにくく、<ruby>中<rt>なか</rt></ruby>から<ruby>外<rt>そと</rt></ruby>が<ruby>見<rt>み</rt></ruby>えやすい<ruby>木製<rt>もくせい</rt></ruby>の<ruby>格子<rt>こうし</rt></ruby>を<ruby>何<rt>なに</rt></ruby>と<ruby>呼<rt>よ</rt></ruby>ぶでしょう？",
@@ -124,7 +124,7 @@ if current_idx >= total_q:
     st.header("🎉 クイズ おわり！")
     st.subheader(f"あなたのスコア: {total_q} もん ちゅう {st.session_state.score} もん せいかい")
 
-    if st.button("さいしょから もういちど ちょうせんする", type="primary"):
+    if st.button("さいしょから もういちど ちょうせんする", type="primary", key="restart"):
         st.session_state.current_q = 0
         st.session_state.score = 0
         st.session_state.answered = False
@@ -144,42 +144,46 @@ else:
     if img is not None:
         st.image(img, use_container_width=True)
 
-    # 問題文（HTMLのrubyタグを使うため unsafe_allow_html=True）
+    # 問題文
     st.markdown(f"### {q_data['q']}", unsafe_allow_html=True)
 
-    # 回答前：ボタンで選択
-    if not st.session_state.answered:
-        for opt in q_data["opts"]:
-            if st.button(opt, key=opt, use_container_width=True):
-                st.session_state.selected_opt = opt
-                st.session_state.answered = True
-                if opt == q_data["ans"]:
-                    st.session_state.score += 1
-                st.rerun()
+    # 回答エリア（コンテナで囲って表示の切り替えによる要素の崩れを防ぐ）
+    answer_container = st.container()
 
-    # 回答後：結果と解説を表示
-    else:
-        user_choice = st.session_state.selected_opt
-        if user_choice == q_data["ans"]:
-            st.success(f"⭕️ せいかい！ （あなたのこたえ: {user_choice}）")
+    with answer_container:
+        if not st.session_state.answered:
+            # 回答選択用ボタン
+            for i, opt in enumerate(q_data["opts"]):
+                # keyに問題番号を組み合わせることで一意にする
+                if st.button(opt, key=f"q_{current_idx}_opt_{i}", use_container_width=True):
+                    st.session_state.selected_opt = opt
+                    st.session_state.answered = True
+                    if opt == q_data["ans"]:
+                        st.session_state.score += 1
+                    st.rerun()
         else:
-            st.error(
-                f"❌ ざんねん... 不正解（ふせいかい） （あなたのこたえ: {user_choice} / せいかい: {q_data['ans']}）"
+            # 回答後：結果と解説の表示
+            user_choice = st.session_state.selected_opt
+            if user_choice == q_data["ans"]:
+                st.success(f"⭕️ せいかい！ （あなたのこたえ: {user_choice}）")
+            else:
+                st.error(
+                    f"❌ ざんねん... 不正解（ふせいかい） （あなたのこたえ: {user_choice} / せいかい: {q_data['ans']}）"
+                )
+
+            # 解説ボックス
+            st.markdown(
+                f"""
+                <div class="explanation-box">
+                    💡 <b>かいせつ:</b><br>{q_data['exp']}
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
-        # 【修正ポイント】HTMLタグ（<ruby>）を正しく反映させるためカスタムDIVを使用
-        st.markdown(
-            f"""
-            <div class="explanation-box">
-                💡 <b>かいせつ:</b><br>{q_data['exp']}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        # 次の問題へ進むボタン
-        if st.button("つぎの もんだいへ ➔", type="primary", use_container_width=True):
-            st.session_state.current_q += 1
-            st.session_state.answered = False
-            st.session_state.selected_opt = None
-            st.rerun()
+            # 次の問題へ進むボタン
+            if st.button("つぎの もんだいへ ➔", type="primary", key=f"next_{current_idx}", use_container_width=True):
+                st.session_state.current_q += 1
+                st.session_state.answered = False
+                st.session_state.selected_opt = None
+                st.rerun()
