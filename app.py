@@ -40,6 +40,17 @@ st.markdown("""
         color: #FF69B4;
         font-weight: normal;
     }
+    /* カスタム解説ボックス（HTMLルビ対応） */
+    .explanation-box {
+        background-color: #E6F3FF;
+        border: 2px solid #B0E0E6;
+        border-radius: 15px;
+        padding: 15px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        color: #333333;
+        font-size: 1.1rem;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -156,8 +167,15 @@ else:
                 f"❌ ざんねん... 不正解（ふせいかい） （あなたのこたえ: {user_choice} / せいかい: {q_data['ans']}）"
             )
 
-        # 解説文もルビ対応
-        st.info(f"💡 **かいせつ:** {q_data['exp']}", icon="💡")
+        # 【修正ポイント】HTMLタグ（<ruby>）を正しく反映させるためカスタムDIVを使用
+        st.markdown(
+            f"""
+            <div class="explanation-box">
+                💡 <b>かいせつ:</b><br>{q_data['exp']}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
         # 次の問題へ進むボタン
         if st.button("つぎの もんだいへ ➔", type="primary", use_container_width=True):
