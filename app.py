@@ -158,13 +158,13 @@ quiz_list = [
         "q": "このキャラクターの<ruby>名前<rt>なまえ</rt></ruby>はなにでしょう？",
         "opts": [
             "A: 湯巡権三（ゆめぐりごんぞう）",
-            "B: あわら湯たろう（ゆたろう）",
+            "B: かわしま湯た子（ゆたこ）",
             "C: 温泉ごんちゃん（おんせんごんちゃん）",
         ],
         "ans": "A: 湯巡権三（ゆめぐりごんぞう）",
         "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>キャラクター<rt>きゃらくたー</rt></ruby>「<ruby>湯巡権三<rt>ゆめぐりごんぞう</rt></ruby>」さんです！",
         "image_prefix": "gonzo",
-        "answer_image_prefix": "kawa",
+        "answer_image_prefix": "ka",
     },
     # ⑧ 既存：東茶屋街の格子
     {
