@@ -164,7 +164,7 @@ quiz_list = [
         "ans": "A: 湯巡権三（ゆめぐりごんぞう）",
         "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>キャラクター<rt>きゃらくたー</rt></ruby>「<ruby>湯巡権三<rt>ゆめぐりごんぞう</rt></ruby>」さんです！",
         "image_prefix": "gonzo",
-        "answer_image_prefix": "kawasima",
+        "answer_image_prefix": "kawa",
     },
     # ⑧ 既存：東茶屋街の格子
     {
