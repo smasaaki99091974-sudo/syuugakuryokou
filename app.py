@@ -24,7 +24,7 @@ st.markdown(
         font-weight: bold;
         border: 3px solid #FFB6C1;
         padding: 20px 32px;
-        font-size: 2.2rem !important; /* 選択肢の文字をかなり大きく */
+        font-size: 2.5rem !important; /* 選択肢の文字をさらに大きく変更 */
         line-height: 1.5;
     }
     .stButton>button:hover {
