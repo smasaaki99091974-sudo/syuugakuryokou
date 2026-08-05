@@ -16,15 +16,15 @@ st.markdown(
         background-color: #FFF9F2;
     }
     
-    /* ---- ボタン（選択肢など）を大きく・丸く・かわいくする ---- */
+    /* ---- ボタン（選択肢など）をさらに大きく・丸く・かわいくする ---- */
     .stButton>button {
         border-radius: 20px;
         background-color: #FFE4E1;
         color: #4A4A4A;
         font-weight: bold;
         border: 2px solid #FFB6C1;
-        padding: 12px 24px;
-        font-size: 1.4rem; /* 選択肢の文字を大きく調整 */
+        padding: 16px 24px;
+        font-size: 1.6rem; /* 選択肢の文字をさらに大きく調整 */
         line-height: 1.5;   /* 文字の天地にゆとりを持たせる */
     }
     .stButton>button:hover {
@@ -32,16 +32,22 @@ st.markdown(
         color: white;
     }
     
+    /* ---- 問題文の文字サイズを大きくする ---- */
+    h3 {
+        font-size: 1.8rem !important;
+        color: #333333;
+    }
+
     /* ---- ルビ（フリガナ）のスタイル調整 ---- */
     /* 漢字（本文）を大きく表示 */
     ruby {
-        font-size: 1.4rem;
+        font-size: 1.6rem;
         font-weight: bold;
-        line-height: 2.2; /* ルビと被らないように行間を確保 */
+        line-height: 2.4; /* ルビと被らないように行間を確保 */
     }
     /* フリガナ（ルビ）を小さく・見やすい濃い青色に調整 */
     rt {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         color: #1A5276; /* 見やすい濃い青色 */
         font-weight: bold;
     }
@@ -55,7 +61,7 @@ st.markdown(
         margin-top: 15px;
         margin-bottom: 15px;
         color: #333333;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
     </style>
 """,
@@ -65,6 +71,8 @@ st.markdown(
 
 # ---- 各問題の画像（写真・イラスト）を読み込む関数 ----
 def get_quiz_image(file_prefix):
+    if not file_prefix:
+        return None
     jpg_path = f"{file_prefix}.jpg"
     png_path = f"{file_prefix}.png"
 
@@ -73,9 +81,6 @@ def get_quiz_image(file_prefix):
     elif os.path.exists(jpg_path):
         return Image.open(jpg_path)
     else:
-        st.warning(
-            f"がぞうファイル '{file_prefix}.png' (または .jpg) が見つかりません。GitHubにアップロードしてください。"
-        )
         return None
 
 
@@ -164,7 +169,7 @@ quiz_list = [
         "ans": "A: 湯巡権三（ゆめぐりごんぞう）",
         "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>キャラクター<rt>きゃらくたー</rt></ruby>「<ruby>湯巡権三<rt>ゆめぐりごんぞう</rt></ruby>」さんです！",
         "image_prefix": "gonzo",
-        "answer_image_prefix": "ka ",
+        "answer_image_prefix": "kawasima",
     },
     # ⑧ 既存：東茶屋街の格子
     {
@@ -175,12 +180,12 @@ quiz_list = [
             "C: 千本格子（せんぼんごうし）",
         ],
         "ans": "B: 木虫籠（きむすこ）",
-        "exp": "<ruby>金沢<rt>かなざわ</rt></ruby>の<ruby>町家<rt>まちや</rt></ruby><ruby>特有<rt>とくゆう</rt></ruby>の<ruby>細<rt>ほそ</rt></ruby>い<ruby>木格子<rt>きごうし</rt></ruby>のことで、<ruby>光<rt>ひかり</rt></ruby>を取り<ruby>入<rt>い</rt></ruby>れつつプライバシーを<ruby>守<rt>まも</rt></ruby>る<ruby>工夫<rt>くふう</rt></ruby>がされています。",
+        "exp": "<ruby>金沢<rt>かなざわ</rt></ruby>の<ruby>町家<rt>まちや</rt></ruby><ruby>特有<rt>とくゆう</rt></ruby>の<ruby>細<rt>ほそ</rt></ruby>い<ruby>木格子<rt>きごうし</rt></ruby>のことで、<ruby>光<rt>ひかり</rt></ruby>を取り<ruby>入<rt>い</rt></ruby>れつつプライバシーを<ruby>守<rt>mamo</rt></ruby>る<ruby>工夫<rt>くふう</rt></ruby>がされています。",
         "image_prefix": "kimusuko",
     },
     # ⑨ 既存：あわら温泉の足湯
     {
-        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>ninki</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
+        "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>にんき</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
         "opts": [
             "A: 足湯（あしゆ）",
             "B: 温泉（おんせん）たまご作り場（つくりば）",
