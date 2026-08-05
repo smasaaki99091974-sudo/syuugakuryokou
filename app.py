@@ -7,7 +7,7 @@ st.set_page_config(
     page_title="金沢・福井 修学旅行クイズ", page_icon="🏯", layout="centered"
 )
 
-# ---- デザインをさらに大きく見やすくするCSS ----
+# ---- デザインをかわいくするCSS（カスタムスタイル） ----
 st.markdown(
     """
     <style>
@@ -16,58 +16,46 @@ st.markdown(
         background-color: #FFF9F2;
     }
     
-    /* ---- ボタン（選択肢など）の文字を特大にする ---- */
+    /* ---- ボタン（選択肢など）を大きく・丸く・かわいくする ---- */
     .stButton>button {
         border-radius: 20px;
         background-color: #FFE4E1;
         color: #4A4A4A;
         font-weight: bold;
-        border: 3px solid #FFB6C1;
-        padding: 20px 32px;
-        font-size: 2.5rem !important; /* 選択肢の文字をさらに大きく変更 */
-        line-height: 1.5;
+        border: 2px solid #FFB6C1;
+        padding: 12px 24px;
+        font-size: 1.4rem; /* 選択肢の文字を大きく調整 */
+        line-height: 1.5;   /* 文字の天地にゆとりを持たせる */
     }
     .stButton>button:hover {
         background-color: #FFB6C1;
         color: white;
     }
     
-    /* ---- 問題文の文字を特大にする ---- */
-    .quiz-question {
-        font-size: 2.2rem !important;
-        font-weight: bold;
-        line-height: 1.6;
-    }
-
-    /* ---- ルビ（フリガナ）のスタイル調整（かなり大きく） ---- */
+    /* ---- ルビ（フリガナ）のスタイル調整 ---- */
+    /* 漢字（本文）を大きく表示 */
     ruby {
-        font-size: 2.2rem;
+        font-size: 1.4rem;
         font-weight: bold;
-        line-height: 2.8;
+        line-height: 2.2; /* ルビと被らないように行間を確保 */
     }
+    /* フリガナ（ルビ）を小さく・見やすい濃い青色に調整 */
     rt {
-        font-size: 1.2rem;
-        color: #1A5276;
+        font-size: 0.85rem;
+        color: #1A5276; /* 見やすい濃い青色 */
         font-weight: bold;
     }
     
-    /* ---- 解説ボックスの文字を特大にする ---- */
+    /* カスタム解説ボックス（HTMLルビ対応） */
     .explanation-box {
         background-color: #E6F3FF;
-        border: 3px solid #B0E0E6;
+        border: 2px solid #B0E0E6;
         border-radius: 15px;
-        padding: 25px;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        padding: 15px;
+        margin-top: 15px;
+        margin-bottom: 15px;
         color: #333333;
-        font-size: 1.9rem !important; /* 解説の文字をかなり大きく */
-        line-height: 1.7;
-    }
-
-    /* 正解・不正解メッセージの文字を特大にする */
-    .stSuccess, .stError {
-        font-size: 2.0rem !important;
-        font-weight: bold;
+        font-size: 1.1rem;
     }
     </style>
 """,
@@ -91,7 +79,7 @@ def get_quiz_image(file_prefix):
         return None
 
 
-# ---- クイズのデータ（全13問） ----
+# ---- クイズのデータ（全10問） ----
 quiz_list = [
     # ① 1日目に行くところ
     {
@@ -138,7 +126,7 @@ quiz_list = [
         "opts": [
             "1: 軽自動車（けいじどうしゃ）",
             "2: 観光（かんこう）バス",
-            "3: 八角君（やすみくん）",
+            "3: 新幹線（しんかんせん）の車両（しゃりょう）",
         ],
         "ans": "2: 観光（かんこう）バス",
         "exp": "ティラノサウルスは<ruby>全長<rt>ぜんちょう</rt></ruby>およそ12〜13メートルあり、<ruby>大型<rt>おおがた</rt></ruby>の<ruby>観光<rt>かんこう</rt></ruby>バスとほぼ<ruby>同<rt>おな</rt></ruby>じくらいの<ruby>大<rt>おお</rt></ruby>きさです！",
@@ -170,15 +158,15 @@ quiz_list = [
         "q": "このキャラクターの<ruby>名前<rt>なまえ</rt></ruby>はなにでしょう？",
         "opts": [
             "A: 湯巡権三（ゆめぐりごんぞう）",
-            "B: かわしま湯た子（ゆたこ）",
+            "B: あわら湯たろう（ゆたろう）",
             "C: 温泉ごんちゃん（おんせんごんちゃん）",
         ],
         "ans": "A: 湯巡権三（ゆめぐりごんぞう）",
         "exp": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>キャラクター<rt>きゃらくたー</rt></ruby>「<ruby>湯巡権三<rt>ゆめぐりごんぞう</rt></ruby>」さんです！",
         "image_prefix": "gonzo",
-        "answer_image_prefix": "ka",
+        "answer_image_prefix": "kawasima",
     },
-    # ⑧ 東茶屋街の格子
+    # ⑧ 既存：東茶屋街の格子
     {
         "q": "<ruby>東茶屋街<rt>ひがしちゃやがい</rt></ruby>の<ruby>美<rt>うつく</rt></ruby>しい<ruby>建物<rt>たてもの</rt></ruby>に<ruby>見<rt>み</rt></ruby>られる、<ruby>外<rt>そと</rt></ruby>から<ruby>中<rt>なか</rt></ruby>が<ruby>見<rt>み</rt></ruby>えにくく、<ruby>中<rt>なか</rt></ruby>から<ruby>外<rt>そと</rt></ruby>が<ruby>見<rt>み</rt></ruby>えやすい<ruby>木製<rt>もくせい</rt></ruby>の<ruby>格子<rt>こうし</rt></ruby>を<ruby>何<rt>なに</rt></ruby>と<ruby>呼<rt>よ</rt></ruby>ぶでしょう？",
         "opts": [
@@ -190,7 +178,7 @@ quiz_list = [
         "exp": "<ruby>金沢<rt>かなざわ</rt></ruby>の<ruby>町家<rt>まちや</rt></ruby><ruby>特有<rt>とくゆう</rt></ruby>の<ruby>細<rt>ほそ</rt></ruby>い<ruby>木格子<rt>きごうし</rt></ruby>のことで、<ruby>光<rt>ひかり</rt></ruby>を取り<ruby>入<rt>い</rt></ruby>れつつプライバシーを<ruby>守<rt>まも</rt></ruby>る<ruby>工夫<rt>くふう</rt></ruby>がされています。",
         "image_prefix": "kimusuko",
     },
-    # ⑨ あわら温泉の足湯
+    # ⑨ 既存：あわら温泉の足湯
     {
         "q": "あわら<ruby>温泉<rt>おんせん</rt></ruby>の<ruby>湯<rt>ゆ</rt></ruby>まち<ruby>広場<rt>ひろば</rt></ruby>にある、<ruby>無料<rt>むりょう</rt></ruby>で誰（だれ）でも<ruby>気軽<rt>きがる</rt></ruby>にたのしめる<ruby>人気<rt>ninki</rt></ruby>スポットは<ruby>何<rt>なに</rt></ruby>でしょう？",
         "opts": [
@@ -203,40 +191,7 @@ quiz_list = [
         "image_prefix": "onsen",
         "answer_image_prefix": "asiyu",
     },
-    # ⑩ 電車のマナー①（全体のマナー）
-    {
-        "q": "<ruby>修学旅行<rt>しゅうがくりょこう</rt></ruby>などで<ruby>大勢<rt>おおぜい</rt></ruby>で<ruby>電車<rt>でんしゃ</rt></ruby>に<ruby>乗<rt>の</rt></ruby>るとき<ruby>大切<rt>たいせつ</rt></ruby>なマナーはどれでしょう？",
-        "opts": [
-            "A: ホームや<ruby>車内<rt>しゃない</rt></ruby>で<ruby>大<rt>おお</rt></ruby>きな<ruby>声<rt>こえ</rt></ruby>で<ruby>騒<rt>さわ</rt></ruby>いだり、<ruby>友達<rt>ともだち</rt></ruby>と<ruby>大<rt>おお</rt></ruby>きな<ruby>声<rt>こえ</rt></ruby>で<ruby>話<rt>hana</rt></ruby>したりしない",
-            "B: <ruby>邪魔<rt>じゃま</rt></ruby>になるので<ruby>網棚<rt>あみだな</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<ruby>寝転<rt>ねころ</rt></ruby>ぶ",
-        ],
-        "ans": "A: ホームや車内で大きな声で騒いだり、友達と大声で話したりしない",
-        "exp": "<ruby>修学旅行中<rt>しゅうがくりょこうちゅう</rt></ruby>は<ruby>気分<rt>きぶん</rt></ruby>が<ruby>高<rt>たか</rt></ruby>まりがちですが、<ruby>一般<rt>いっぱん</rt></ruby>のお<ruby>客様<rt>きゃくさま</rt></ruby>もたくさん<ruby>利用<rt>りよう</rt></ruby>しています。<ruby>静<rt>しず</rt></ruby>かに<ruby>過<rt>す</rt></ruby>ごしましょう。",
-        "image_prefix": "train_manner1",
-    },
-    # ⑪ 電車のマナー②（座席や譲り合い）
-    {
-        "q": "<ruby>電車<rt>でんしゃ</rt></ruby>の<ruby>座席<rt>ざせき</rt></ruby>に<ruby>座<rt>すわ</rt></ruby>るときや、<ruby>席<rt>せき</rt></ruby>を<ruby>譲<rt>ゆず</rt></ruby>るときのマナーとして<ruby>正<rt>ただ</rt></ruby>しいものはどれでしょう？",
-        "opts": [
-            "A: お<ruby>年寄<rt>としよ</rt></ruby>りや<ruby>体<rt>からだ</rt></ruby>の<ruby>不自由<rt>ふじゆう</rt></ruby>な<ruby>方<rt>かた</rt></ruby>が<ruby>乗<rt>の</rt></ruby>ってきたら、<ruby>自分<rt>じぶん</rt></ruby>から<ruby>進<rt>すす</rt></ruby>んで<ruby>席<rt>せき</rt></ruby>を<ruby>譲<rt>ゆず</rt></ruby>る",
-            "B: <ruby>友達同士<rt>ともだちどうし</rt></ruby>で<ruby>固<rt>かた</rt></ruby>まって<ruby>座<rt>すわ</rt></ruby>り、<ruby>空<rt>あ</rt></ruby>いた<ruby>席<rt>せき</rt></ruby>に<ruby>荷物<rt>にもつ</rt></ruby>を<ruby>置<rt>お</rt></ruby>く",
-        ],
-        "ans": "A: お年寄りや体の不自由な方が乗ってきたら、自分から進んで席を譲る",
-        "exp": "<ruby>公共<rt>こうきょう</rt></ruby>の<ruby>交通機関<rt>こうつうきかん</rt></ruby>では、<ruby>必要<rt>ひつよう</rt></ruby>としている<ruby>人<rt>ひと</rt></ruby>に<ruby>席<rt>せき</rt></ruby>を<ruby>譲<rt>ゆず</rt></ruby>る<ruby>思<rt>おも</rt></ruby>いやりの<ruby>心<rt>こころ</rt></ruby>が<ruby>大切<rt>たいせつ</rt></ruby>です。",
-        "image_prefix": "train_manner2",
-    },
-    # ⑫ 電車のマナー③（乗車・下車のマナー）
-    {
-        "q": "<ruby>駅<rt>えき</rt></ruby>のホームや<ruby>電車<rt>でんしゃ</rt></ruby>のドア<ruby>付近<rt>ふきん</rt></ruby>で、<ruby>乗<rt>の</rt></ruby>り<ruby>降<rt>おり</rt></ruby>するときの<ruby>正<rt>ただ</rt></ruby>しいマナーはどれでしょう？",
-        "opts": [
-            "A: <ruby>電車<rt>でんしゃ</rt></ruby>が<ruby>到着<rt>とうちゃく</rt></ruby>したら、<ruby>降<rt>おり</rt></ruby>る<ruby>人<rt>ひと</rt></ruby>が<ruby>先<rt>さき</rt></ruby>なので、ドアの<ruby>横<rt>よこ</rt></ruby>に<ruby>並<rt>なら</rt></ruby>んで<ruby>待<rt>ま</rt></ruby>つ",
-            "B: <ruby>電車<rt>でんしゃ</rt></ruby>が<ruby>来<rt>き</rt></ruby>たら、<ruby>乗<rt>の</rt></ruby>るためにすぐドアの<ruby>真中<rt>まんなか</rt></ruby>に<ruby>並<rt>なら</rt></ruby>んで<ruby>待<rt>ま</rt></ruby>つ",
-        ],
-        "ans": "A: 電車が到着したら、降りる人が先なので、ドアの横に並んで待つ",
-        "exp": "スムーズな<ruby>乗<rt>の</rt></ruby>り<ruby>降<rt>おり</rt></ruby>のため、まずは<ruby>電車<rt>でんしゃ</rt></ruby>から<ruby>降<rt>おり</rt></ruby>る<ruby>人<rt>ひと</rt></ruby>を<ruby>待<rt>ま</rt></ruby>ってから、<ruby>順番<rt>じゅんばん</rt></ruby>に<ruby>乗<rt>の</rt></ruby>り<ruby>込<rt>こ</rt></ruby>みましょう。",
-        "image_prefix": "train_manner3",
-    },
-    # ⑬ ラスト：関野先生の問題
+    # ⑩ 既存（ラスト）：関野先生の問題
     {
         "q": "<ruby>関野<rt>せきの</rt></ruby><ruby>先生<rt>せんせい</rt></ruby>はかっこいい。○か×か",
         "opts": ["〇", "×"],
@@ -297,7 +252,7 @@ else:
             st.image(img, use_container_width=True)
 
     # 問題文
-    st.markdown(f'<div class="quiz-question">{q_data["q"]}</div>', unsafe_allow_html=True)
+    st.markdown(f"### {q_data['q']}", unsafe_allow_html=True)
 
     # 回答エリア
     answer_container = st.container()
