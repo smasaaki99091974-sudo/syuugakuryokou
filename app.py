@@ -7,7 +7,7 @@ st.set_page_config(
     page_title="金沢・福井 修学旅行クイズ", page_icon="🏯", layout="centered"
 )
 
-# ---- デザインをかわいくするCSS（カスタムスタイル） ----
+# ---- デザインをさらに大きく見やすくするCSS ----
 st.markdown(
     """
     <style>
@@ -16,59 +16,57 @@ st.markdown(
         background-color: #FFF9F2;
     }
     
-    /* ---- ボタン（選択肢など）を大きく・丸く・かわいくする ---- */
+    /* ---- ボタン（選択肢など）の文字を特大にする ---- */
     .stButton>button {
         border-radius: 20px;
         background-color: #FFE4E1;
         color: #4A4A4A;
         font-weight: bold;
-        border: 2px solid #FFB6C1;
-        padding: 16px 28px;
-        font-size: 1.8rem; /* 選択肢の文字をさらに大きく調整 */
-        line-height: 1.5;   /* 文字の天地にゆとりを持たせる */
+        border: 3px solid #FFB6C1;
+        padding: 20px 32px;
+        font-size: 2.2rem !important; /* 選択肢の文字をかなり大きく */
+        line-height: 1.5;
     }
     .stButton>button:hover {
         background-color: #FFB6C1;
         color: white;
     }
     
-    /* ---- 問題文の文字を大きく調整 ---- */
+    /* ---- 問題文の文字を特大にする ---- */
     .quiz-question {
-        font-size: 1.8rem !important;
+        font-size: 2.2rem !important;
         font-weight: bold;
         line-height: 1.6;
     }
 
-    /* ---- ルビ（フリガナ）のスタイル調整 ---- */
-    /* 漢字（本文）を大きく表示 */
+    /* ---- ルビ（フリガナ）のスタイル調整（かなり大きく） ---- */
     ruby {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
         font-weight: bold;
-        line-height: 2.4; /* ルビと被らないように行間を確保 */
+        line-height: 2.8;
     }
-    /* フリガナ（ルビ）を小さく・見やすい濃い青色に調整 */
     rt {
-        font-size: 0.95rem;
-        color: #1A5276; /* 見やすい濃い青色 */
+        font-size: 1.2rem;
+        color: #1A5276;
         font-weight: bold;
     }
     
-    /* カスタム解説ボックス（文字サイズを大きく調整） */
+    /* ---- 解説ボックスの文字を特大にする ---- */
     .explanation-box {
         background-color: #E6F3FF;
-        border: 2px solid #B0E0E6;
+        border: 3px solid #B0E0E6;
         border-radius: 15px;
-        padding: 20px;
-        margin-top: 15px;
-        margin-bottom: 15px;
+        padding: 25px;
+        margin-top: 20px;
+        margin-bottom: 20px;
         color: #333333;
-        font-size: 1.5rem; /* 解説の文字を大きく */
-        line-height: 1.6;
+        font-size: 1.9rem !important; /* 解説の文字をかなり大きく */
+        line-height: 1.7;
     }
 
-    /* 正解・不正解メッセージの文字を大きくする */
+    /* 正解・不正解メッセージの文字を特大にする */
     .stSuccess, .stError {
-        font-size: 1.5rem !important;
+        font-size: 2.0rem !important;
         font-weight: bold;
     }
     </style>
@@ -209,7 +207,7 @@ quiz_list = [
     {
         "q": "<ruby>修学旅行<rt>しゅうがくりょこう</rt></ruby>などで<ruby>大勢<rt>おおぜい</rt></ruby>で<ruby>電車<rt>でんしゃ</rt></ruby>に<ruby>乗<rt>の</rt></ruby>るとき<ruby>大切<rt>たいせつ</rt></ruby>なマナーはどれでしょう？",
         "opts": [
-            "A: ホームや<ruby>車内<rt>しゃない</rt></ruby>で<ruby>大<rt>おお</rt></ruby>きな<ruby>声<rt>こえ</rt></ruby>で<ruby>騒<rt>さわ</rt></ruby>いだり、<ruby>友達<rt>ともだち</rt></ruby>と<ruby>大<rt>おお</rt></ruby>きな<ruby>声<rt>こえ</rt></ruby>で<ruby>話<rt>はな</rt></ruby>したりしない",
+            "A: ホームや<ruby>車内<rt>しゃない</rt></ruby>で<ruby>大<rt>おお</rt></ruby>きな<ruby>声<rt>こえ</rt></ruby>で<ruby>騒<rt>さわ</rt></ruby>いだり、<ruby>友達<rt>ともだち</rt></ruby>と<ruby>大<rt>おお</rt></ruby>きな<ruby>声<rt>こえ</rt></ruby>で<ruby>話<rt>hana</rt></ruby>したりしない",
             "B: <ruby>邪魔<rt>じゃま</rt></ruby>になるので<ruby>網棚<rt>あみだな</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<ruby>寝転<rt>ねころ</rt></ruby>ぶ",
         ],
         "ans": "A: ホームや車内で大きな声で騒いだり、友達と大声で話したりしない",
@@ -298,7 +296,7 @@ else:
         if img is not None:
             st.image(img, use_container_width=True)
 
-    # 問題文（大きく見やすいスタイルを適用）
+    # 問題文
     st.markdown(f'<div class="quiz-question">{q_data["q"]}</div>', unsafe_allow_html=True)
 
     # 回答エリア
@@ -345,7 +343,7 @@ else:
                 if res_img is not None:
                     st.image(res_img, width=200)
 
-            # 解説ボックス（大きく調整したCSSを適用）
+            # 解説ボックス
             st.markdown(
                 f"""
                 <div class="explanation-box">
